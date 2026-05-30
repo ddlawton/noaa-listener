@@ -1,0 +1,19 @@
+services:
+  noaa_listener:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: noaa_listener
+    env_file:
+      - .env
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - noaa_network
+    command: python -m noaa_listener.main
+
+networks:
+  noaa_network:
+    driver: bridge

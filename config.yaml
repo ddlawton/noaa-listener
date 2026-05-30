@@ -1,0 +1,53 @@
+# NOAA Data Ingestion Configuration
+# Note: Location configuration is now in .env file
+
+# Data Fetching Configuration
+fetching:
+  # How often to fetch new forecast data (in minutes)
+  forecast_update_interval: 60
+  
+  # Historical data backfill settings
+  historical:
+    start_date: "2022-01-01"  # Start date for historical data (YYYY-MM-DD)
+    # End date defaults to today if not specified
+    # end_date: "2024-12-31"
+  
+  # Forecast data retention (in days)
+  forecast_retention_days: 30
+
+# API Configuration
+api:
+  nws:
+    base_url: "https://api.weather.gov"
+    user_agent: "NOAA-Listener/1.0"
+    timeout: 30  # seconds
+    max_retries: 3
+    retry_delay: 5  # seconds (will use exponential backoff)
+  
+  cdo:
+    base_url: "https://www.ncdc.noaa.gov/cdo-web/api/v2"
+    timeout: 30
+    max_retries: 3
+    retry_delay: 5
+    # Maximum number of records per request (CDO API limit is 1000)
+    limit: 1000
+
+# Database Configuration
+database:
+  # Connection pool settings
+  pool_size: 5
+  max_overflow: 10
+  pool_timeout: 30
+  # Batch insert size for bulk operations (increased for better throughput)
+  batch_size: 500
+
+# Logging Configuration
+logging:
+  format: "%(asctime)s - [%(correlation_id)s] - %(name)s - %(levelname)s - %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  # Log file location (relative to project root)
+  file: "logs/noaa_listener.log"
+  # Maximum log file size (in MB)
+  max_file_size: 10
+  # Number of backup log files to keep
+  backup_count: 5
