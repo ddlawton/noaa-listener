@@ -99,7 +99,7 @@ def setup_logger(name: str, config: Optional[object] = None) -> logging.Logger:
         logger.addHandler(file_handler)
     except (PermissionError, OSError) as e:
         # Log file not writable (e.g. read-only or unowned volume mount) — stdout only
-        logging.getLogger(__name__).warning(
+        logger.warning(
             "Could not create log file handler for '%s': %s. Logging to stdout only.",
             config.log_file, e
         )
