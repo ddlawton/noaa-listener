@@ -84,18 +84,25 @@ def setup_logger(name: str, config: Optional[object] = None) -> logging.Logger:
     logger.addHandler(console_handler)
     
     # File handler
-    log_file = Path(config.log_file)
-    log_file.parent.mkdir(parents=True, exist_ok=True)
-    
-    file_handler = RotatingFileHandler(
-        log_file,
-        maxBytes=config.log_max_file_size,
-        backupCount=config.log_backup_count
-    )
-    file_handler.setLevel(config.log_level)
-    file_handler.setFormatter(formatter)
-    file_handler.addFilter(CorrelationIdFilter())
-    logger.addHandler(file_handler)
+    try:
+        log_file = Path(config.log_file)
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+
+        file_handler = RotatingFileHandler(
+            log_file,
+            maxBytes=config.log_max_file_size,
+            backupCount=config.log_backup_count
+        )
+        file_handler.setLevel(config.log_level)
+        file_handler.setFormatter(formatter)
+        file_handler.addFilter(CorrelationIdFilter())
+        logger.addHandler(file_handler)
+    except (PermissionError, OSError) as e:
+        # Log file not writable (e.g. read-only or unowned volume mount) — stdout only
+        logger.warning(
+            "Could not create log file handler for '%s': %s. Logging to stdout only.",
+            config.log_file, e
+        )
     
     return logger
 
