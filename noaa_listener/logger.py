@@ -8,7 +8,7 @@ from pathlib import Path
 from logging.handlers import RotatingFileHandler
 from typing import Optional
 
-from noaa_listener.config import get_config
+import noaa_listener.config as config_module
 
 # Thread-local storage for correlation IDs
 _thread_local = threading.local()
@@ -61,7 +61,7 @@ def setup_logger(name: str, config: Optional[object] = None) -> logging.Logger:
         Configured logger instance
     """
     if config is None:
-        config = get_config()
+        config = config_module.get_config()
     
     logger = logging.getLogger(name)
     logger.setLevel(config.log_level)

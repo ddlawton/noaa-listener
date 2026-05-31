@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, text, Engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import QueuePool
 
-from noaa_listener.config import get_config
+import noaa_listener.config as config_module
 from noaa_listener.logger import get_logger
 
 logger = get_logger(__name__)
@@ -23,7 +23,7 @@ class Database:
         Args:
             config: Configuration object (if None, will load default)
         """
-        self.config = config or get_config()
+        self.config = config or config_module.get_config()
         self.engine: Optional[Engine] = None
         self.session_factory: Optional[sessionmaker] = None
         self._connect()

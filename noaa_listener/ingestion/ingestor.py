@@ -17,7 +17,7 @@ from noaa_listener.ingestion.parsers import (
     parse_cdo_data,
     aggregate_cdo_records
 )
-from noaa_listener.config import get_config
+import noaa_listener.config as config_module
 from noaa_listener.logger import get_logger
 
 logger = get_logger(__name__)
@@ -39,7 +39,7 @@ class DataIngestor:
             config: Configuration object
             db: Database connection
         """
-        self.config = config or get_config()
+        self.config = config or config_module.get_config()
         self.db = db or Database(self.config)
         self.nws_client = NWSClient(self.config)
         self.cdo_client = CDOClient(self.config)

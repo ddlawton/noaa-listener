@@ -7,7 +7,7 @@ from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
-from noaa_listener.config import get_config
+import noaa_listener.config as config_module
 from noaa_listener.logger import get_logger
 from noaa_listener.database import Database
 from noaa_listener.ingestion.ingestor import DataIngestor
@@ -20,7 +20,7 @@ class NOAAListener:
     
     def __init__(self):
         """Initialize NOAA Listener application."""
-        self.config = get_config()
+        self.config = config_module.get_config()
         self.db = Database(self.config)
         self.ingestor = DataIngestor(self.config, self.db)
         self.scheduler = BlockingScheduler()

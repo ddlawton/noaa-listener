@@ -4,7 +4,7 @@ import sys
 import argparse
 from datetime import datetime
 
-from noaa_listener.config import get_config
+import noaa_listener.config as config_module
 from noaa_listener.logger import get_logger
 from noaa_listener.database import Database
 from noaa_listener.ingestion.ingestor import DataIngestor
@@ -38,7 +38,7 @@ def main():
     
     try:
         # Load configuration
-        config = get_config(args.config)
+        config = config_module.get_config(args.config)
         
         # Validate configuration
         try:

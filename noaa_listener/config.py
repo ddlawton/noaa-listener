@@ -36,19 +36,31 @@ class Config:
     @property
     def latitude(self) -> float:
         """Get configured latitude from environment variable."""
-        lat_str = os.getenv('LOCATION_LATITUDE', '0.0')
-        return float(lat_str)
+        lat_env = os.getenv('LOCATION_LATITUDE')
+        if lat_env:
+            try:
+                return float(lat_env)
+            except ValueError:
+                pass
+        # Fallback to YAML config
+        return float(self._config.get('location', {}).get('latitude', 0.0))
     
     @property
     def longitude(self) -> float:
         """Get configured longitude from environment variable."""
-        lon_str = os.getenv('LOCATION_LONGITUDE', '0.0')
-        return float(lon_str)
+        lon_env = os.getenv('LOCATION_LONGITUDE')
+        if lon_env:
+            try:
+                return float(lon_env)
+            except ValueError:
+                pass
+        # Fallback to YAML config
+        return float(self._config.get('location', {}).get('longitude', 0.0))
     
     @property
     def location_name(self) -> str:
         """Get location name from environment variable."""
-        return os.getenv('LOCATION_NAME', 'Unknown')
+        return os.getenv('LOCATION_NAME') or self._config.get('location', {}).get('name', 'Unknown')
     
     # Fetching Configuration
     @property
